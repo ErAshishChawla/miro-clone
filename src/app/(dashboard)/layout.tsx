@@ -10,12 +10,14 @@ interface DashboardLayoutProps {
 
 function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <main className="h-screen w-screen">
+    <main className="h-screen w-screen grid grid-cols-[60px_1fr] grid-rows-1">
       <Sidebar />
-      <div className="pl-[60px] h-full">
-        <div className="flex gap-x-3 h-full">
-          <OrgSidebar />
-          <div className="h-full flex-1">
+      <div className="w-full h-full">
+        <div className="w-full h-full grid grid-cols-1 lg:grid-cols-[206px_1fr] gap-x-3 grid-rows-1">
+          <div className="w-full h-full hidden lg:block">
+            <OrgSidebar />
+          </div>
+          <div className="w-full h-full flex flex-col">
             <Navbar />
             {children}
           </div>
