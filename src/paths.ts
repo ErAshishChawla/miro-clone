@@ -11,4 +11,17 @@ export const paths = {
   organizationProfile() {
     return "/organization-profile";
   },
+
+  userProfile() {
+    return "/user-profile";
+  },
+  signin() {
+    return "/sign-in";
+  },
+  signup() {
+    return "/sign-up";
+  },
+  dashboard() {
+    return "/dashboard";
+  },
 };

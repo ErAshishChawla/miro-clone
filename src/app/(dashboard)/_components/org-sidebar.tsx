@@ -19,7 +19,7 @@ function OrgSidebar() {
 
   return (
     <div className="flex flex-col gap-y-6 pl-5 pt-5 w-full h-full">
-      <Link href={""}>
+      <Link href={paths.home()}>
         <div className="flex items-center gap-x-2">
           <Image src={"/logo.svg"} alt="Logo" height={60} width={50} />
           <span className={cn("font-semibold text-2xl", poppinsFont.className)}>
