@@ -20,7 +20,7 @@ function CreateOrganizationButton() {
     //     sideOffset={18}
     //   >
     //     <Link
-    //       href={paths.CreateOrganization()}
+    //       href={paths.createOrganization()}
     //       className="bg-white/25 h-full w-full flex items-center justify-center opacity-60 hover:opacity-100 transition rounded-md"
     //     >
     //       <Plus className="text-white" />
@@ -44,10 +44,7 @@ function CreateOrganizationButton() {
         </div>
       </DialogTrigger>
       <DialogContent className="p-0 bg-transparent border-none max-w-[480px]">
-        <CreateOrganization
-          routing="virtual"
-          afterCreateOrganizationUrl={paths.home()}
-        />
+        <CreateOrganization routing="virtual" />
       </DialogContent>
     </Dialog>
   );

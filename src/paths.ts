@@ -4,7 +4,7 @@ export const paths = {
   home() {
     return "/";
   },
-  CreateOrganization() {
+  createOrganization() {
     return "/create-organization";
   },
 };
