@@ -48,6 +48,9 @@ function OrgSidebar() {
             },
           },
         }}
+        afterCreateOrganizationUrl={paths.home()}
+        createOrganizationMode="navigation"
+        createOrganizationUrl={paths.createOrganization()}
       />
       <div className="space-y-1 w-full">
         <Button

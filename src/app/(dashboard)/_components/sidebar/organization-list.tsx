@@ -6,11 +6,12 @@ import React from "react";
 import OrganizationItem from "./organization-item";
 
 function OrganizationList() {
-  const { userMemberships } = useOrganizationList({
+  const { userMemberships, isLoaded } = useOrganizationList({
     userMemberships: {
       infinite: true,
     },
   });
+
   return (
     <ul className="flex flex-col gap-y-4">
       {userMemberships.data?.map((membership) => {
