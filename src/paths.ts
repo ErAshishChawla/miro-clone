@@ -7,4 +7,8 @@ export const paths = {
   createOrganization() {
     return "/create-organization";
   },
+
+  organizationProfile() {
+    return "/organization-profile";
+  },
 };
