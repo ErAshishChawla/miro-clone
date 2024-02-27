@@ -3,9 +3,9 @@
 import { useOrganizationList } from "@clerk/nextjs";
 
 import React from "react";
-import OrganisationItem from "./organisation-item";
+import OrganizationItem from "./organization-item";
 
-function OrganisationList() {
+function OrganizationList() {
   const { userMemberships } = useOrganizationList({
     userMemberships: {
       infinite: true,
@@ -15,7 +15,7 @@ function OrganisationList() {
     <ul className="flex flex-col gap-y-4">
       {userMemberships.data?.map((membership) => {
         return (
-          <OrganisationItem
+          <OrganizationItem
             key={membership.organization.id}
             name={membership.organization.name}
             id={membership.organization.id}
@@ -27,4 +27,4 @@ function OrganisationList() {
   );
 }
 
-export default OrganisationList;
+export default OrganizationList;

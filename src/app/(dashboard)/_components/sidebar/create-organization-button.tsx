@@ -8,9 +8,26 @@ import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import Hint from "@/components/hint";
 
 import { paths } from "@/paths";
+import Link from "next/link";
 
-function CreateOrganisationButton() {
+function CreateOrganizationButton() {
   return (
+    // <div className="aspect-square">
+    //   <Hint
+    //     label="Create organization"
+    //     side="right"
+    //     align="start"
+    //     sideOffset={18}
+    //   >
+    //     <Link
+    //       href={paths.CreateOrganization()}
+    //       className="bg-white/25 h-full w-full flex items-center justify-center opacity-60 hover:opacity-100 transition rounded-md"
+    //     >
+    //       <Plus className="text-white" />
+    //     </Link>
+    //   </Hint>
+    // </div>
+
     <Dialog>
       <DialogTrigger asChild>
         <div className="aspect-square">
@@ -36,4 +53,4 @@ function CreateOrganisationButton() {
   );
 }
 
-export default CreateOrganisationButton;
+export default CreateOrganizationButton;

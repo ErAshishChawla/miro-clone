@@ -8,13 +8,13 @@ import { useOrganization, useOrganizationList } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 import Hint from "@/components/hint";
 
-interface OrganisationItemProps {
+interface OrganizationItemProps {
   id: string;
   name: string;
   imageUrl: string;
 }
 
-function OrganisationItem({ id, name, imageUrl }: OrganisationItemProps) {
+function OrganizationItem({ id, name, imageUrl }: OrganizationItemProps) {
   const { organization } = useOrganization();
   const { setActive } = useOrganizationList();
 
@@ -32,7 +32,7 @@ function OrganisationItem({ id, name, imageUrl }: OrganisationItemProps) {
     <li className="aspect-square relative">
       <Hint label={name} align="start" side="right" sideOffset={18}>
         <Image
-          alt={name || "Organisation name"}
+          alt={name || "Organization name"}
           src={imageUrl}
           onClick={onClick}
           width={25}
@@ -47,4 +47,4 @@ function OrganisationItem({ id, name, imageUrl }: OrganisationItemProps) {
   );
 }
 
-export default OrganisationItem;
+export default OrganizationItem;
