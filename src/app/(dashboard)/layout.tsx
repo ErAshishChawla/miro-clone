@@ -20,7 +20,7 @@ function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
           <div className="w-full h-full flex flex-col">
             <Navbar />
-            {children}
+            <div className="flex-1">{children}</div>
           </div>
         </div>
       </div>
