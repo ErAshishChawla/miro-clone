@@ -24,4 +24,8 @@ export const paths = {
   dashboard() {
     return "/dashboard";
   },
+
+  board(id: string) {
+    return `/board/${id}`;
+  },
 };
