@@ -36,3 +36,49 @@ export const createBoard = mutation({
     return board;
   },
 });
+
+export const removeBoard = mutation({
+  args: {
+    id: v.id("boards"),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    // Todo: Later check to delete favorite relation as well
+
+    await ctx.db.delete(args.id);
+  },
+});
+
+export const updateBoard = mutation({
+  args: {
+    id: v.id("boards"),
+    title: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const title = args.title.trim();
+
+    if (!title) {
+      throw new Error("Title cannot be empty");
+    }
+
+    if (title.length > 60) {
+      throw new Error("Title cannot be longer than 60 characters");
+    }
+
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const board = await ctx.db.patch(args.id, {
+      title,
+    });
+
+    return board;
+  },
+});
