@@ -8,12 +8,16 @@ import { formatDistanceToNow } from "date-fns";
 import Footer from "./footer";
 import Overlay from "./overlay";
 
-import { paths } from "@/paths";
-import { useConvexAuth } from "convex/react";
-import { useUser } from "@clerk/nextjs";
-import { Skeleton } from "@/components/ui/skeleton";
 import Actions from "@/components/actions";
+import { Skeleton } from "@/components/ui/skeleton";
+
 import { MoreHorizontal } from "lucide-react";
+
+import { paths } from "@/paths";
+import { useUser } from "@clerk/nextjs";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { api } from "../../../../../convex/_generated/api";
+import { toast } from "sonner";
 
 interface BoardCardProps {
   id: string;
@@ -43,6 +47,27 @@ function BoardCard({
     addSuffix: true,
   });
 
+  const { mutate: favouriteBoard, pending: favoriteBoardPending } =
+    useApiMutation(api.board.favoriteBoard);
+  const { mutate: unfavoriteBoard, pending: unfavoriteBoardPending } =
+    useApiMutation(api.board.unfavoriteBoard);
+
+  const toggleFavorite = async () => {
+    try {
+      if (isFavorite) {
+        await unfavoriteBoard({ boardId: id });
+      } else {
+        await favouriteBoard({ boardId: id, orgId: orgId });
+      }
+    } catch (error) {
+      if (isFavorite) {
+        toast.error("Failed to unfavorite board");
+      } else {
+        toast.error("Failed to favorite board");
+      }
+    }
+  };
+
   return (
     <Link href={paths.board(id)}>
       <div className="group aspect-[100/127] border rounded-lg flex flex-col justify-between overflow-hidden">
@@ -60,8 +85,8 @@ function BoardCard({
           title={title}
           authorLabel={authorLabel}
           createdAtLabel={createdAtLabel}
-          onClick={() => {}}
-          disabled={false}
+          onClick={toggleFavorite}
+          disabled={favoriteBoardPending || unfavoriteBoardPending}
         />
       </div>
     </Link>

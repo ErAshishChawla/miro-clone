@@ -3,12 +3,14 @@
 import React from "react";
 import Image from "next/image";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 
 import { api } from "@/../convex/_generated/api";
 import { useOrganization } from "@clerk/nextjs";
 import { useApiMutation } from "@/hooks/useApiMutation";
+import { paths } from "@/paths";
 
 function EmptyBoards() {
   const { organization } = useOrganization();
@@ -16,14 +18,17 @@ function EmptyBoards() {
     api.board.createBoard
   );
 
+  const router = useRouter();
+
   const onClick = async () => {
     try {
       if (!organization) return;
-      await createBoard({
+      const board = await createBoard({
         orgId: organization.id,
         title: "Untitled",
       });
       toast.success(`Board created`);
+      router.push(paths.board(board));
     } catch (error) {
       toast.error(`Failed to create board`);
     }
