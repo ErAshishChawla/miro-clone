@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 
 import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
-import { Id } from "../../../../../convex/_generated/dataModel";
 import Loading from "./loading";
 
 import Room from "@/components/room";

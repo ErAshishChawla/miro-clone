@@ -15,24 +15,12 @@ export async function POST(request: Request) {
   const authorization = auth();
   const user = await currentUser();
 
-  // console.log("AUTH_INFO", {
-  //   authorization,
-  //   user,
-  // });
-
   if (!authorization || !user) {
     return new Response("Unauthorized", { status: 403 });
   }
 
   const { room } = await request.json();
   const board = await convex.query(api.board.getBoard, { id: room });
-
-  // console.log("AUTH_INFO", {
-  //   room,
-  //   board,
-  //   boardOrgId: board?.orgId,
-  //   userOrgId: authorization.orgId,
-  // });
 
   if (board?.orgId !== authorization.orgId) {
     return new Response("Unauthorized", { status: 403 });
@@ -42,8 +30,6 @@ export async function POST(request: Request) {
     name: user.firstName || "Anonymous",
     picture: user.imageUrl,
   };
-
-  // console.log({ userInfo });
 
   const session = liveblocks.prepareSession(user.id, {
     userInfo,
