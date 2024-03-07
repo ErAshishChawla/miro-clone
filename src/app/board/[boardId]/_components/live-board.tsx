@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { notFound } from "next/navigation";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
@@ -9,6 +10,7 @@ import Loading from "./loading";
 
 import Room from "@/components/room";
 import Canvas from "./canvas";
+import { paths } from "@/paths";
 
 interface LiveBoardProps {
   boardId: string;
@@ -18,6 +20,7 @@ function LiveBoard({ boardId }: LiveBoardProps) {
   const board = useQuery(api.board.getBoard, {
     id: boardId,
   });
+  const router = useRouter();
 
   let content: React.ReactNode = null;
 
@@ -25,11 +28,12 @@ function LiveBoard({ boardId }: LiveBoardProps) {
     content = null;
   } else {
     if (board === null) {
-      notFound();
+      toast.error("Board not found");
+      router.replace(paths.home());
     } else {
       content = (
         <Room roomId={boardId} fallback={<Loading />}>
-          <Canvas />
+          <Canvas boardId={boardId} />
         </Room>
       );
     }

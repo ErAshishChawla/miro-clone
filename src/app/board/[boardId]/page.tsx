@@ -1,7 +1,9 @@
 import React from "react";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import LiveBoard from "./_components/live-board";
+import { toast } from "sonner";
+import { paths } from "@/paths";
 
 interface BoardIdPageProps {
   params: {
@@ -13,7 +15,8 @@ function BoardIdPage({ params }: BoardIdPageProps) {
   const boardId = params.boardId;
 
   if (!boardId) {
-    notFound();
+    toast.error("Invalid board id");
+    redirect(paths.home());
   }
 
   return <LiveBoard boardId={boardId} />;

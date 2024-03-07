@@ -16,6 +16,8 @@ import { useDeleteBoardConfirmModal } from "@/store/use-delete-board-confirm-mod
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { api } from "../../../convex/_generated/api";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { paths } from "@/paths";
 
 function DeleteBoardConfirmModal() {
   const { isOpen, onClose, initialValues } = useDeleteBoardConfirmModal();
@@ -24,11 +26,14 @@ function DeleteBoardConfirmModal() {
     api.board.removeBoard
   );
 
+  const router = useRouter();
+
   const onDelete = async () => {
     try {
       await removeBoard({ id: initialValues.id });
       toast.success("Board deleted");
       onClose();
+      // router.replace(paths.home());
     } catch (error) {
       toast.error("Failed to delete board");
     }

@@ -11,7 +11,11 @@ import Toolbar from "./toolbar";
 import { useErrorListener, useStatus } from "../../../../../liveblocks.config";
 import { paths } from "@/paths";
 
-function Canvas() {
+interface CanvasProps {
+  boardId: string;
+}
+
+function Canvas({ boardId }: CanvasProps) {
   const router = useRouter();
 
   useErrorListener((error) => {
@@ -21,7 +25,7 @@ function Canvas() {
 
   return (
     <div className="h-screen w-screen bg-neutral-100 relative touch-none">
-      <Info />
+      <Info boardId={boardId} />
       <Participants />
       <Toolbar />
     </div>
