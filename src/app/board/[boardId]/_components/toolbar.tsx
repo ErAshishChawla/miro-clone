@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import React from "react";
+import React, { use } from "react";
 import ToolButton from "./tool-button";
 import {
   Circle,
@@ -12,25 +12,21 @@ import {
   Undo2,
 } from "lucide-react";
 
-import { CanvasMode, CanvasState, LayerType } from "@/types/canvas";
+import {
+  useCanRedo,
+  useCanUndo,
+  useHistory,
+} from "../../../../../liveblocks.config";
+import { useCanvasStore } from "@/store/useCanvasStore";
 
-interface ToolbarProps {
-  canvasState: CanvasState;
-  setCanvasState: (newState: CanvasState) => void;
-  undo: () => void;
-  redo: () => void;
-  canUndo: boolean;
-  canRedo: boolean;
-}
+import { CanvasMode, LayerType } from "@/types/canvas";
 
-function Toolbar({
-  canvasState,
-  setCanvasState,
-  undo,
-  redo,
-  canUndo,
-  canRedo,
-}: ToolbarProps) {
+function Toolbar() {
+  const history = useHistory();
+  const canUndo = useCanUndo();
+  const canRedo = useCanRedo();
+
+  const { canvasState, setCanvasState } = useCanvasStore();
   return (
     <div className="absolute top-[50%] -translate-y-[50%] left-2 flex flex-col gap-y-4">
       <div className="bg-white rounded-md p-1.5 flex gap-y-1 flex-col items-center shadow-md">
@@ -117,13 +113,13 @@ function Toolbar({
         <ToolButton
           label="Undo"
           icon={Undo2}
-          onClick={undo}
+          onClick={history.undo}
           isDisabled={!canUndo}
         />
         <ToolButton
           label="Redo"
           icon={Redo2}
-          onClick={redo}
+          onClick={history.redo}
           isDisabled={!canRedo}
         />
       </div>

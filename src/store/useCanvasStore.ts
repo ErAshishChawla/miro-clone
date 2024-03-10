@@ -2,17 +2,17 @@ import { CanvasMode, CanvasState } from "@/types/canvas";
 import { create } from "zustand";
 
 type CanvasStore = {
-  state: CanvasState;
-  setState: (newState: CanvasState) => void;
+  canvasState: CanvasState;
+  setCanvasState: (newState: CanvasState) => void;
 };
 
 export const useCanvasStore = create<CanvasStore>((set) => {
   return {
-    state: {
+    canvasState: {
       mode: CanvasMode.None,
     },
-    setState: (newState: CanvasState) => {
-      set({ state: newState });
+    setCanvasState: (newState: CanvasState) => {
+      set({ canvasState: newState });
     },
   };
 });
