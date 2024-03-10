@@ -7,7 +7,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import UserAvatar from "@/components/user-avatar";
 
 import { useOthers, useSelf } from "../../../../../liveblocks.config";
-import { generateRandomHexCode } from "@/lib/utils";
 
 const MAX_SHOWN_OTHER_USERS = 1;
 
@@ -41,7 +40,7 @@ function Participants() {
           }
           src={currentUser.info?.picture}
           fallback={currentUser.info?.name?.[0] || "Y"}
-          borderColor={generateRandomHexCode()}
+          borderColor={colorHash.hex(`${currentUser.connectionId}`)}
         />
       )}
 
@@ -49,7 +48,7 @@ function Participants() {
         <UserAvatar
           name={`${otherUsers.length - MAX_SHOWN_OTHER_USERS} more`}
           fallback={`+${otherUsers.length - MAX_SHOWN_OTHER_USERS}`}
-          borderColor={generateRandomHexCode()}
+          borderColor={colorHash.hex("Other Users")}
         />
       )}
     </div>
