@@ -44,7 +44,7 @@ export type RectangleLayer = {
   value?: string;
 };
 
-export type ElipseLayer = {
+export type EllipseLayer = {
   type: LayerType.Ellipse;
   x: number;
   y: number;
@@ -130,3 +130,10 @@ export type CanvasState =
   | {
       mode: CanvasMode.Pencil;
     };
+
+export type Layer =
+  | RectangleLayer
+  | EllipseLayer
+  | PathLayer
+  | TextLayer
+  | NoteLayer;

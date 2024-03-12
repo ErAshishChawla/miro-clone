@@ -1,24 +1,16 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
-import { notFound, useRouter } from "next/navigation";
+import React from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import Info from "./info";
 import Participants from "./participants";
 import Toolbar from "./toolbar";
-import { CursorsPresence } from "./cursors-presence";
 
-import {
-  useErrorListener,
-  useHistory,
-  useCanUndo,
-  useCanRedo,
-  useMutation,
-} from "../../../../../liveblocks.config";
+import { useErrorListener } from "../../../../../liveblocks.config";
 import { paths } from "@/paths";
-import { Camera, CanvasMode, CanvasState } from "@/types/canvas";
-import { pointerEventToCanvasPoint } from "@/lib/utils";
+
 import CursorSvg from "./cursor-svg";
 
 interface CanvasProps {
