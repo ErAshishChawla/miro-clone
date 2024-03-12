@@ -44,7 +44,7 @@ function CursorSvg() {
         cursor: current,
       });
     },
-    []
+    [cameraState]
   );
 
   const onWheel = useCallback(
