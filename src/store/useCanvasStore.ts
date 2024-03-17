@@ -20,9 +20,9 @@ export const useCanvasStore = create<CanvasStore>((set) => {
       y: 0,
     },
     lastUsedColor: {
-      r: 0,
-      g: 0,
-      b: 0,
+      r: 255,
+      g: 255,
+      b: 255,
     },
     setCanvasState: (newState: CanvasState) => {
       set({ canvasState: newState });
