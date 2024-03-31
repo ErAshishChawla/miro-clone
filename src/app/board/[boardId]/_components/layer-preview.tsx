@@ -3,7 +3,11 @@
 import React, { memo } from "react";
 import { useStorage } from "../../../../../liveblocks.config";
 import { LayerType } from "@/types/canvas";
+
 import Rectangle from "./rectangle";
+import Ellipse from "./ellipse";
+import Text from "./text";
+import Note from "./note";
 
 interface LayerPreviewProps {
   layerId: string;
@@ -29,6 +33,36 @@ const LayerPreview = memo(function LayerPreview({
           <Rectangle
             layer={layer}
             layerId={layerId}
+            onPointerDown={onLayerPointerDown}
+            selectionColor={selectionColor}
+          />
+        );
+        break;
+      case LayerType.Ellipse:
+        content = (
+          <Ellipse
+            id={layerId}
+            layer={layer}
+            onPointerDown={onLayerPointerDown}
+            selectionColor={selectionColor}
+          />
+        );
+        break;
+      case LayerType.Text:
+        content = (
+          <Text
+            id={layerId}
+            layer={layer}
+            onPointerDown={onLayerPointerDown}
+            selectionColor={selectionColor}
+          />
+        );
+        break;
+      case LayerType.Note:
+        content = (
+          <Note
+            id={layerId}
+            layer={layer}
             onPointerDown={onLayerPointerDown}
             selectionColor={selectionColor}
           />

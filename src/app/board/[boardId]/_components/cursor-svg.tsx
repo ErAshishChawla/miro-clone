@@ -16,7 +16,11 @@ import {
   useStorage,
 } from "../../../../../liveblocks.config";
 
-import { pointerEventToCanvasPoint, resizeBounds } from "@/lib/utils";
+import {
+  findIntersectingLayersWithRectangle,
+  pointerEventToCanvasPoint,
+  resizeBounds,
+} from "@/lib/utils";
 import { useCanvasStore } from "@/store/useCanvasStore";
 import {
   CanvasMode,
@@ -46,6 +50,35 @@ function CursorSvg() {
 
   const colorHash = new ColorHash();
 
+  const unselectLayers = useMutation(({ self, setMyPresence }) => {
+    if (self.presence.selection.length > 0) {
+      setMyPresence({ selection: [] }, { addToHistory: true });
+    }
+  }, []);
+
+  const updateSelectionNet = useMutation(
+    ({ storage, setMyPresence }, current: Point, origin: Point) => {
+      const layers = storage.get("layers").toImmutable();
+      setCanvasState({ mode: CanvasMode.SelectionNet, origin, current });
+
+      const ids = findIntersectingLayersWithRectangle(
+        layerIds,
+        layers,
+        origin,
+        current
+      );
+
+      setMyPresence({ selection: ids });
+    },
+    [layerIds]
+  );
+
+  const startMultiSelection = useCallback((current: Point, origin: Point) => {
+    if (Math.abs(current.x - origin.x) + Math.abs(current.y - origin.y) > 5) {
+      setCanvasState({ mode: CanvasMode.SelectionNet, origin, current });
+    }
+  }, []);
+
   const resizeSelectedLayer = useMutation(
     ({ storage, self }, point: Point) => {
       if (canvasState.mode !== CanvasMode.Resizing) {
@@ -68,13 +101,48 @@ function CursorSvg() {
     [canvasState]
   );
 
+  const translateSelectedLayers = useMutation(
+    ({ storage, self }, point: Point) => {
+      if (canvasState.mode !== CanvasMode.Translating) {
+        return;
+      }
+
+      const offset = {
+        x: point.x - canvasState.current.x,
+        y: point.y - canvasState.current.y,
+      };
+
+      const liveLayers = storage.get("layers");
+
+      for (const layerId of self.presence.selection) {
+        const layer = liveLayers.get(layerId);
+
+        if (layer) {
+          layer.update({
+            x: layer.get("x") + offset.x,
+            y: layer.get("y") + offset.y,
+          });
+        }
+      }
+
+      setCanvasState({ mode: CanvasMode.Translating, current: point });
+    },
+    [canvasState]
+  );
+
   const onPointerMove = useMutation(
     ({ setMyPresence }, e: React.PointerEvent) => {
       e.preventDefault();
 
       const current = pointerEventToCanvasPoint(e, cameraState);
 
-      if (canvasState.mode === CanvasMode.Resizing) {
+      if (canvasState.mode === CanvasMode.Pressing) {
+        startMultiSelection(current, canvasState.origin);
+      } else if (canvasState.mode === CanvasMode.SelectionNet) {
+        updateSelectionNet(current, canvasState.origin);
+      } else if (canvasState.mode === CanvasMode.Translating) {
+        translateSelectedLayers(current);
+      } else if (canvasState.mode === CanvasMode.Resizing) {
         resizeSelectedLayer(current);
       }
 
@@ -82,7 +150,7 @@ function CursorSvg() {
         cursor: current,
       });
     },
-    [cameraState, canvasState, resizeSelectedLayer]
+    [cameraState, canvasState, resizeSelectedLayer, translateSelectedLayers]
   );
 
   const onResizeHandlePointerDown = useCallback(
@@ -146,20 +214,41 @@ function CursorSvg() {
     [lastUsedColor]
   );
 
+  const onPointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      const point = pointerEventToCanvasPoint(e, cameraState);
+
+      if (canvasState.mode === CanvasMode.Inserting) {
+        return;
+      }
+
+      // Todo: Add case for drawing
+
+      setCanvasState({ origin: point, mode: CanvasMode.Pressing });
+    },
+    [cameraState, canvasState, setCanvasState]
+  );
   const onPointerUp = useMutation(
     ({}, e) => {
       const point = pointerEventToCanvasPoint(e, cameraState);
-      console.log(point, canvasState.mode);
 
-      if (canvasState.mode === CanvasMode.Inserting) {
-        insertLayer(canvasState.layerType, point);
-      } else {
+      if (
+        canvasState.mode === CanvasMode.None ||
+        canvasState.mode === CanvasMode.Pressing
+      ) {
+        unselectLayers();
         setCanvasState({ mode: CanvasMode.None });
+      } else {
+        if (canvasState.mode === CanvasMode.Inserting) {
+          insertLayer(canvasState.layerType, point);
+        } else {
+          setCanvasState({ mode: CanvasMode.None });
+        }
       }
 
       history.resume();
     },
-    [cameraState, canvasState, insertLayer, history]
+    [cameraState, canvasState, insertLayer, history, unselectLayers]
   );
 
   const selections = useOthersMapped((otherUsers) => {
@@ -211,6 +300,7 @@ function CursorSvg() {
       onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}
       onPointerUp={onPointerUp}
+      onPointerDown={onPointerDown}
     >
       <g
         style={{
@@ -228,6 +318,16 @@ function CursorSvg() {
           );
         })}
         <SelectionBox onResizeHandlePointerDown={onResizeHandlePointerDown} />
+        {canvasState.mode === CanvasMode.SelectionNet &&
+          canvasState.current !== null && (
+            <rect
+              className="fill-blue-500/5 stroke-blue-500 stroke-1"
+              x={Math.min(canvasState.origin.x, canvasState.current.x)}
+              y={Math.min(canvasState.origin.y, canvasState.current.y)}
+              width={Math.abs(canvasState.origin.x - canvasState.current.x)}
+              height={Math.abs(canvasState.origin.y - canvasState.current.y)}
+            />
+          )}
         <CursorsPresence />
       </g>
     </svg>

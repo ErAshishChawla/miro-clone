@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import Info from "./info";
 import Participants from "./participants";
 import Toolbar from "./toolbar";
+import SelectionTools from "./selection-tools";
 
 import { useErrorListener } from "../../../../../liveblocks.config";
 import { paths } from "@/paths";
@@ -30,6 +31,7 @@ function Canvas({ boardId }: CanvasProps) {
       <Info boardId={boardId} />
       <Participants />
       <Toolbar />
+      <SelectionTools />
       <CursorSvg />
     </div>
   );
